@@ -1,0 +1,7 @@
+What the hell is this crap?
+
+Pysearch is a python search program I'm currently developing.  It originated from a need to search a wide variety of files, without necessarily knowing or caring what they were and potentially in a cross platform environment.
+
+As such it's the first python project I'm making for a real world problem without a pattern someone else created. It's likely to be kind of shoddy for a while.  Please let me know if you have suggestions that aren't just proper python style.  Propper style is something I intend to work on, but it's a distant second to getting it working properly with the functionality  I want.
+
+The end goal is to have a wide variety of search functionality and to focus on comprehensiveness of search over effeciency.
