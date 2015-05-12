@@ -6,9 +6,9 @@ import argparse
 
 # Custom search results class to simplify passing details and making sure all needed data is associated with results objects
 # Made by me, probably will be buggy initially
-import searchresults
+from searchresults import search_results
 
-def handle_output(output_file, result, arg)
+def handle_output(output_file, result, arg):
 	"""output handler function, output is getting too complicated and making the code hard to read"""
 	
 	#this block determines if printing to std out occurs - allows processing multiple flags once and clearly
@@ -25,7 +25,7 @@ def handle_output(output_file, result, arg)
 	#drops output into the specificed output
 	if not arg.no_file_output:
 		output_file.write(output)
-	if printFlag
+	if print_flag:
 		print output
 		
 
@@ -40,9 +40,9 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 	try:
 		if arg.input_file:
 			#binary mode flag from command line
-			if not arg.binary_file_mode
+			if not arg.binary_file_mode:
 				search_input_file = open(arg.input_file, 'rb')
-				for line in search_input_file
+				for line in search_input_file:
 					search_list = search_list.append(line)
 				search_input_file.close()
 			#binary file handling
@@ -50,7 +50,7 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 				#note that any the file input handler is appended to the end
 				search_input_handler = open(arg.input_file, 'rb')
 				#should provide a sufficiently small memory base to iterate over the ~ 1mb chunks taken from searched files
-				for stream in search_input_handler.read(16384)
+				for stream in search_input_handler.read(16384):
 					search_list.append(input_stream)
 				
 			
@@ -75,11 +75,11 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 			if search_val.lower() in input_file.lower():
 				handle_output(output_file, search_results(input_file, input_dir), arg)
 		#flag that indicates not to search in files - from cli arguments
-		if not arg.names_only
+		if not arg.names_only:
 			#file interaction - Error city
 			try:
 			
-				if not binary_file_mode
+				if not arg.binary_file_mode:
 					#opens input_file for searching
 					input_file_handler = open(os.path.join(input_dir, input_file), 'rb')
 					line_count = 0
@@ -93,10 +93,10 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 							if search_val.lower() in line.lower():
 								handle_output(output_file, search_results(input_file, input_dir, line, line_count), arg)
 				else:
-					for search_val in search_list
-						for data in input_file.read(1048576)
+					for search_val in search_list:
+						for data in input_file.read(1048576):
 							# Should provide a sufficiently large memory base to iterate over for search results
-							if search_val in data
+							if search_val in data:
 							
 								handle_output(output_file, search_results(input_file, input_dir, line, data.tell()))
 					
