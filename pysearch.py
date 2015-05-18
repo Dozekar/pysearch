@@ -118,7 +118,7 @@ def Main():
 	parser.add_argument('-b', action='store_true', dest='binary_file_mode', default=False, help='Searches for through files in binary mode.  Works best with file input for obvious reasons.')
 	parser.add_argument('-n', action='store_true', dest='names_only', default=False, help='Searches only directory and file names, not content.')
 	parser.add_argument('-p', action='store_true', dest='print_flag', default=False, help='Print to the stdout. Defaults to off. Potentially lots of system alarms printing.')
-	parser.add_argument('-r', action='store_false', dest='record_line', default=True, help='By default the program provides the line that gets the searh hit to output. -r prevents that.')
+	parser.add_argument('-l', action='store_false', dest='record_line', default=True, help='By default the program provides the line that gets the searh hit to output. -r prevents that.')
 	output_options.add_argument('-o', action='store', dest='output_file', default='pySeachLog.txt', help='File for output.  Will default to pySearchLog.txt')
 	output_options.add_argument('-pO', action='store_true', dest='no_file_output', default=False, help='Print only. Does not write to the output file.')
 	parser.add_argument('search_values', action='store', nargs='+', help='Values to search for.')

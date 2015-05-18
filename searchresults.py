@@ -6,31 +6,7 @@ class search_results(object):
 		This module may be added to the base code of pysearch if it isn't too hard to read or long, 
 		but for not it's separate"""
 	
-	def __init__(self):
-		# Generic constructor This can by validated by testing for type = False
-		self.file_name = False
-		self.dir_path = False
-		self.line_contents = False
-		self.file_result_location = False
-		self.result_type = False
-		
-	def __init__(self, in_dir_path):
-		# Directory result constructor
-		self.file_name = False
-		self.dir_path = in_dir_path
-		self.line_contents = False
-		self.file_result_location = False
-		self.result_type = "Directory"
-	
-	def __init__(self, in_file_name, in_dir_path):
-		# File result constructor
-		self.file_name = in_file_name
-		self.dir_path = in_dir_path
-		self.line_contents = False
-		self.file_result_location = False
-		self.result_type = "File"
-		
-	def __init__(self, in_file_name, in_dir_path, in_line_contents, in_file_result_location):
+	def __init__(self, in_dir_path, in_file_name=False, in_line_contents=False, in_file_result_location=False):
 		# Line result constructor
 		self.file_name = in_file_name
 		self.dir_path = in_dir_path
