@@ -73,7 +73,7 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 		# Checks the input_file for hits first, this is the file name
 		for search_val in search_list:
 			if search_val.lower() in input_file.lower():
-				handle_output(output_file, search_results(input_file, input_dir), arg)
+				handle_output(output_file, search_results(input_dir, input_file), arg)
 		#flag that indicates not to search in files - from cli arguments
 		if not arg.names_only:
 			#file interaction - Error city
@@ -91,14 +91,14 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 							#loops through file and search list to compare all permutations
 							
 							if search_val.lower() in line.lower():
-								handle_output(output_file, search_results(input_file, input_dir, line, line_count), arg)
+								handle_output(output_file, search_results(input_dir, input_file, line, line_count), arg)
 				else:
 					for search_val in search_list:
 						for data in input_file.read(1048576):
 							# Should provide a sufficiently large memory base to iterate over for search results
 							if search_val in data:
 							
-								handle_output(output_file, search_results(input_file, input_dir, line, data.tell()))
+								handle_output(output_file, search_results(input_dir, input_file, line, data.tell()))
 					
 			except IOError as e:
 				print 'IO Error in parse_source:'

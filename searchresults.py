@@ -12,7 +12,14 @@ class search_results(object):
 		self.dir_path = in_dir_path
 		self.line_contents = in_line_contents
 		self.file_result_location = in_file_result_location
-		self.result_type = "Line"
+		if in_file_name==False:
+			input_type = "Directory"
+		else:
+			if in_line_contents == False and in_file_result_locaiton == False:
+				input_type = "File Name"
+			else:
+				input_type = "File Contents"
+		self.result_type = input_type
 		
 	def set_dir(self, in_dir_path):
 		#	Sets this object to a Dir result with the input as the passed data
@@ -39,7 +46,7 @@ class search_results(object):
 			self.line_contents = False
 		if self.file_result_location:
 			self.file_result_location = False
-		self.result_type = "File"
+		self.result_type = "File Name"
 		return self
 	
 	def get_file_name(self):
@@ -53,7 +60,7 @@ class search_results(object):
 		self.dir_path = self.in_dir_path
 		self.line_contents = self.in_line_contents
 		self.file_result_location = self.in_file_result_location
-		self.result_type = "Line"
+		self.result_type = "File Contents"
 		return self
 		
 	def get_line_contents(self):
