@@ -24,7 +24,7 @@ def handle_output(output_file, result, arg):
 			
 	#drops output into the specificed output
 	if not arg.no_file_output:
-		output_file.write(output)
+		output_file.write(output + '\n')
 	if print_flag:
 		print output
 		
@@ -129,7 +129,7 @@ def Main():
 	# This initializes the output file when one is in use
 	# While file IO is notorious for errors, honestly we'd rather just crash here with default error handling usually.	
 	if not args.no_file_output:
-		search_output_file = open(args.output_file, 'wb')
+		search_output_file = open(args.output_file, 'w')
 	else:
 		search_output_file = False 
 

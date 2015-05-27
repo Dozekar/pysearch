@@ -15,7 +15,7 @@ class search_results(object):
 		if in_file_name==False:
 			input_type = "Directory"
 		else:
-			if in_line_contents == False and in_file_result_locaiton == False:
+			if in_line_contents == False and in_file_result_location == False:
 				input_type = "File Name"
 			else:
 				input_type = "File Contents"
@@ -78,7 +78,7 @@ class search_results(object):
 		if self.get_type() == 'Directory':
 			output = self.get_type()+ ': ' + self.get_dir()
 		else:
-			if self.get_type() == 'File':
+			if self.get_type() == 'File Name':
 				output = self.get_type() + ': ' + os.path.join(self.get_dir(), self.get_file_name())
 			else:
 				#note: \ continues the line if it ends it
@@ -90,7 +90,7 @@ class search_results(object):
 		if self.get_type() == 'Directory':
 			output = self.get_type()+ ': ' + self.get_dir()
 		else:
-			if self.get_type() == 'File':
+			if self.get_type() == 'File Name':
 				output = self.get_type() + ': ' + os.path.join(self.get_dir(), self.get_file_name())
 			else:
 				#note: \ continues the line if it ends it
