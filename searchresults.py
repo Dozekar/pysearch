@@ -6,19 +6,12 @@ class search_results(object):
 		This module may be added to the base code of pysearch if it isn't too hard to read or long, 
 		but for not it's separate"""
 	
-	def __init__(self, in_dir_path, in_file_name=False, in_line_contents=False, in_file_result_location=False):
+	def __init__(self, input_type, in_dir_path, in_file_name=False, in_line_contents=False, in_file_result_location=False):
 		# Line result constructor
 		self.file_name = in_file_name
 		self.dir_path = in_dir_path
 		self.line_contents = in_line_contents
 		self.file_result_location = in_file_result_location
-		if in_file_name==False:
-			input_type = "Directory"
-		else:
-			if in_line_contents == False and in_file_result_location == False:
-				input_type = "File Name"
-			else:
-				input_type = "File Contents"
 		self.result_type = input_type
 		
 	def set_dir(self, in_dir_path):
@@ -66,6 +59,15 @@ class search_results(object):
 	def get_line_contents(self):
 		# Return line info as a string
 		return self.line_contents
+		
+	def set_zipfile(self, in_file_name, in_dir_path, in_line_contents, in_file_result_location):
+		# Sets result to a line with the input values
+		self.file_name = self.in_file_name
+		self.dir_path = self.in_dir_path
+		self.line_contents = self.in_line_contents
+		self.file_result_location = self.in_file_result_location
+		self.result_type = "Zip File"
+		return self
 		
 	def get_file_result_location(self):
 		return self.file_result_location

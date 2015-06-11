@@ -3,6 +3,7 @@
 # Standard library imports
 import os
 import argparse
+import zipfile
 
 # Custom search results class to simplify passing details and making sure all needed data is associated with results objects
 # Made by me, probably will be buggy initially
@@ -27,6 +28,34 @@ def handle_output(output_file, result, arg):
 		output_file.write(output + '\n')
 	if print_flag:
 		print output
+		
+def zipscanner(input_dir, input_file, output_file, arg, target_type):
+	"""scans zip files and any other files using zip compression"""
+	
+	#sets up search match values in a list
+	if search_values:
+		search_values = arg.search_values
+	if arg.input_file: 
+		search_input_file = open(arg.input_file, 'rb')
+		for line in search_input_file:
+			search_values = search_values.append(line)
+		search_input_file.close()
+	
+	 
+	file_target = os.join(input_dir, input_file)
+	zip_target = ZipFile(file_target, 'r', True)
+	zip_manifest = zip_target.infolist()
+	for item in zip_manifest:
+		for search_value in search_values:
+			if search_value in item.filename:
+				handle_output(input_dir, search_value("Zip File", input_dir, input_file, item.filename, "-zip file name match"), arg)
+		count = 0
+		zip_part = zip_target.open(item, 'rU')
+		for search_value in search_values:
+			if search_value in zip_part:
+				count += 1
+		handle_output(output_file, search_value("Zip File", input_dir, input_file, item.filename, '-zip file hits: ' + str(count)) , arg)	
+	zip_target.close()
 		
 
 def parse_source(input_dir, input_file, output_file, arg, target_type):
@@ -56,10 +85,10 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 			
 	#Error handling block for this try
 	except IOError as e:
-		print 'IO Error in parse_source:'
-		print errno + ' - ' + strerror
-		print 'Data dump - input_file: %r,  output_file: %r' % input_file, output_file
-		raise
+		if(arg.verbosity):
+			print 'IO Error in parse_source:'
+			print str(e.errno) + ' - ' + e.strerror
+			print 'Data dump - input_file: ' + str(input_file) + ',  output_file: ' + str(output_file)
 
 
 	# Parses of the directory's name enter False for inputFile
@@ -67,13 +96,13 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 		for search_val in search_list:
 			if search_val.lower() in input_dir.lower():
 				#search_results is the class defined in searchresults.py to handle output data
-				handle_output(output_file, search_results(input_dir), arg)
+				handle_output(output_file, search_results('Directory', input_dir), arg)
 	else:
 	
 		# Checks the input_file for hits first, this is the file name
 		for search_val in search_list:
 			if search_val.lower() in input_file.lower():
-				handle_output(output_file, search_results(input_dir, input_file), arg)
+				handle_output(output_file, search_results('File Name', input_dir, input_file), arg)
 		#flag that indicates not to search in files - from cli arguments
 		if not arg.names_only:
 			#file interaction - Error city
@@ -85,26 +114,26 @@ def parse_source(input_dir, input_file, output_file, arg, target_type):
 					line_count = 0
 					
 					for line in input_file_handler:
-						line_count = line_count + 1
+						line_count += 1
 						
 						for search_val in search_list:
 							#loops through file and search list to compare all permutations
 							
 							if search_val.lower() in line.lower():
-								handle_output(output_file, search_results(input_dir, input_file, line, line_count), arg)
+								handle_output(output_file, search_results('File Contents', input_dir, input_file, line, line_count), arg)
 				else:
 					for search_val in search_list:
 						for data in input_file.read(1048576):
 							# Should provide a sufficiently large memory base to iterate over for search results
 							if search_val in data:
 							
-								handle_output(output_file, search_results(input_dir, input_file, line, data.tell()))
+								handle_output(output_file, search_results('File Contents', input_dir, input_file, line, data.tell()))
 					
 			except IOError as e:
-				print 'IO Error in parse_source:'
-				print errno + ' - ' + strerror
-				print 'Data dump - input_file: %r,  output_file: %r' % input_file, output_file
-				raise
+				if arg.verbosity:
+					print 'IO Error in parse_source:'
+					print str(e.errno) + ' - ' + e.strerror
+					print 'Data dump - input_file: ' + str(input_file) + ',  output_file: ' + str(output_file)
 
 # Main program control function			
 def Main():
@@ -119,9 +148,10 @@ def Main():
 	parser.add_argument('-n', action='store_true', dest='names_only', default=False, help='Searches only directory and file names, not content.')
 	parser.add_argument('-p', action='store_true', dest='print_flag', default=False, help='Print to the stdout. Defaults to off. Potentially lots of system alarms printing.')
 	parser.add_argument('-l', action='store_false', dest='record_line', default=True, help='By default the program provides the line that gets the searh hit to output. -r prevents that.')
+	parser.add_argument('-v', action='store_true', dest='verbosity', default=False, help='Increase verbosity and report errors.')
 	output_options.add_argument('-o', action='store', dest='output_file', default='pySeachLog.txt', help='File for output.  Will default to pySearchLog.txt')
 	output_options.add_argument('-pO', action='store_true', dest='no_file_output', default=False, help='Print only. Does not write to the output file.')
-	parser.add_argument('search_values', action='store', nargs='+', help='Values to search for.')
+	parser.add_argument('search_values', action='store', nargs='+', default=None, help='Values to search for.')
 	#parses the arguments as set above, see argparse docs if not familiar with syntax
 	args = parser.parse_args()
 	
@@ -142,8 +172,11 @@ def Main():
 		#This will search the directory name
 		parse_source(root, False, search_output_file, args, 'Dir')
 		# This loop runs through the file name and file itself for each entry
-		for file in files:
-			parse_source(root, file, search_output_file, args, 'File')
+		for the_file in files:
+			if not args.binary_file_mode and zipfile.is_zipfile(the_file):
+		        	zipscan(root, the_file, search_output_file, args, 'Zip File')
+			else:
+				parse_source(root, the_file, search_output_file, args, 'File')
 	#closes output file		
 	search_output_file.close()
 	print 'Completed.'
