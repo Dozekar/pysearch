@@ -10,6 +10,4 @@ Notes:
 
 Basic zip file traversal complete, which allows searching of M$ office files.
 
-Issues in nix:
-
-Handles certain filetypes poorly.  Will need to investigate.  May need to disable attemptint to search types of resources.
+Most recent fix should have resolve issues with failing to close files on error.
