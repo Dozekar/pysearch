@@ -14,7 +14,7 @@ def handle_output(output_file, result, arg):
 	
 	#this block determines if printing to std out occurs - allows processing multiple flags once and clearly
 	if arg.print_flag or arg.no_file_output:
-		print_flag = True
+		arg.print_flag = True
 		# A valid print detection drops a newline so that results can more easily be read/parsed
 		print''
 	else:
